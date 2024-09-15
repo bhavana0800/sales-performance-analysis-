@@ -1,0 +1,122 @@
+Project Title: E-Commerce Sales Performance Analysis
+Objective:
+To analyze and visualize the sales performance of an e-commerce company over time, across different product categories, and among customer demographics
+
+Steps:
+1. Data Preparation and Cleaning
+Remove duplicates and check for missing values.
+Format date columns (Order Date) to DateTime format.
+Ensure numerical columns like Sales, Profit, and Quantity are in the correct data type.
+
+import pandas as pd
+import numpy as np
+
+# Load the dataset
+df = pd.read_csv('ecommerce_data.csv')
+
+# Convert Order Date to datetime
+df['Order Date'] = pd.to_datetime(df['Order Date'])
+
+# Check for missing values
+print(df.isnull().sum())
+
+# Drop duplicates if any
+df = df.drop_duplicates()
+
+
+2. Exploratory Data Analysis (EDA)
+Perform basic descriptive statistics to understand the dataset.
+Check sales distribution by Product Category, Customer Segment, and Region.
+
+# Descriptive statistics
+print(df.describe())
+
+# Sales by Product Category
+sales_by_category = df.groupby('Product Category')['Sales'].sum().sort_values(ascending=False)
+print(sales_by_category)
+
+# Sales by Customer Segment
+sales_by_segment = df.groupby('Customer Segment')['Sales'].sum().sort_values(ascending=False)
+print(sales_by_segment)
+
+3. Data Visualization
+a) Sales Trends Over Time
+
+Visualize the sales over time using a line plot to identify trends (e.g., monthly or yearly).
+
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Aggregate sales by month
+df['Month'] = df['Order Date'].dt.to_period('M')
+monthly_sales = df.groupby('Month')['Sales'].sum()
+
+# Plot the sales trend over time
+plt.figure(figsize=(10, 6))
+sns.lineplot(x=monthly_sales.index.astype(str), y=monthly_sales.values)
+plt.xticks(rotation=45)
+plt.title('Monthly Sales Over Time')
+plt.xlabel('Month')
+plt.ylabel('Sales')
+plt.show()
+
+b) Top Performing Product Categories
+
+plt.figure(figsize=(8, 5))
+sns.barplot(x=sales_by_category.index, y=sales_by_category.values)
+plt.title('Sales by Product Category')
+plt.xlabel('Product Category')
+plt.ylabel('Sales')
+plt.xticks(rotation=45)
+plt.show()
+
+c) Sales by Region
+
+sales_by_region = df.groupby('Region')['Sales'].sum()
+
+# Bar plot for Sales by Region
+plt.figure(figsize=(7, 5))
+sns.barplot(x=sales_by_region.index, y=sales_by_region.values)
+plt.title('Sales by Region')
+plt.xlabel('Region')
+plt.ylabel('Sales')
+plt.xticks(rotation=45)
+plt.show()
+
+d) Customer Segment Analysis
+
+profit_by_segment = df.groupby('Customer Segment')['Profit'].sum()
+
+# Bar plot for Sales and Profit by Customer Segment
+plt.figure(figsize=(8, 6))
+sns.barplot(x=sales_by_segment.index, y=sales_by_segment.values, color='blue', label='Sales')
+sns.barplot(x=profit_by_segment.index, y=profit_by_segment.values, color='green', label='Profit')
+plt.title('Sales and Profit by Customer Segment')
+plt.xlabel('Customer Segment')
+plt.ylabel('Amount')
+plt.legend()
+plt.show()
+
+e) Correlation Heatmap
+
+
+# Correlation Heatmap
+plt.figure(figsize=(8, 5))
+sns.heatmap(df[['Sales', 'Profit', 'Quantity']].corr(), annot=True, cmap='coolwarm')
+plt.title('Correlation Heatmap')
+plt.show()
+
+
+Key Insights:
+1. Sales Growth: Monthly sales trends help determine seasonal peaks and identify periods of higher or lower demand.
+2. Top Categories: Bar charts showing sales by product category can highlight top-performing products.
+3. Regional Performance: Comparing sales by region allows you to identify the best-performing markets.
+4. Customer Segments: Understanding which customer segments drive the most sales and profit can assist in targeted marketing.
+5. Correlations: A heatmap will reveal any strong relationships between key variables, such as Sales and Quantity.
+
+Conclusion:
+Through this project, you can analyze key factors affecting the company's sales performance and provide actionable insights. These visualizations are useful for business teams to make data-driven decisions related to marketing, sales strategies, and inventory management.
+
+
+
+
